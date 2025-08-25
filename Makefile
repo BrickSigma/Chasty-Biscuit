@@ -21,9 +21,11 @@ OBJS :=
 
 OUTPUT :=
 
-LDFLAGS := -lstart
+LIBSTART_SUBMODULE = start
+
+LDFLAGS := -L $(LIBSTART_SUBMODULE) -lstart -Wl,-rpath,$(LIBSTART_SUBMODULE)
 CFLAGS := -Wall -Werror -Wextra #-fsanitize=address
-INCLUDE := -I $(SRC_DIR)
+INCLUDE := -I $(SRC_DIR) -I $(LIBSTART_SUBMODULE)/include
 
 # Get the source files and setup other variables depending on the OS
 ifeq ($(OS_NAME), Linux)
@@ -72,7 +74,7 @@ endif
 
 .PHONY: all clean
 
-all: $(OUTPUT)
+all: libstart $(OUTPUT)
 
 $(OUTPUT): $(OBJS)
 	@mkdir -p $(@D)
@@ -85,6 +87,9 @@ $(OBJDIR)/%.o: $(SRC_DIR)/%.cpp
 $(OBJDIR)/%.o: $(SRC_DIR)/%.c
 	@mkdir -p $(@D)
 	$(CC) -c $< -o $@ $(CFLAGS) $(LDFLAGS) $(INCLUDE)
+
+libstart:
+	cd start; make TARGET=$(TARGET) RELEASE=$(RELEASE)
 
 clean:
 	rm -rf *.o *.exe *.out $(OBJDIR)

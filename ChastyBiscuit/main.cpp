@@ -2,10 +2,10 @@
 #include <SDL2/SDL_ttf.h>
 #include <stdbool.h>
 
-#include <start/Application.h>
-#include <start/Clock.h>
-#include <start/Text.h>
-#include <start/Window.h>
+#include <Application.h>
+#include <Clock.h>
+#include <Text.h>
+#include <Window.h>
 
 #ifdef __EMSCRIPTEN__
 #include <emscripten.h>
