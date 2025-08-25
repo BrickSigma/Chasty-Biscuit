@@ -45,7 +45,7 @@ OBJS += $(patsubst $(SRC_DIR)/%.cpp, $(OBJDIR)/%.o, $(CPP_SRCS)) $(patsubst $(SR
 # Setup web and desktop configurations
 ifeq ($(TARGET), WEB)
 	CC = em++
-	LDFLAGS = -s USE_SDL=2 -s USE_SDL_IMAGE=2 -s USE_SDL_TTF=2 -s SDL2_IMAGE_FORMATS='["png"]' -s WASM=1  --preload-file resources/*
+	LDFLAGS += -s USE_SDL=2 -s USE_SDL_IMAGE=2 -s USE_SDL_TTF=2 -s SDL2_IMAGE_FORMATS='["png"]' -s WASM=1  --preload-file resources/* -Wno-unused-command-line-argument
 
 	OUTPUT = index.js
 else ifeq ($(OS_NAME), Linux)
@@ -89,7 +89,8 @@ $(OBJDIR)/%.o: $(SRC_DIR)/%.c
 	$(CC) -c $< -o $@ $(CFLAGS) $(LDFLAGS) $(INCLUDE)
 
 libstart:
-	cd start; make TARGET=$(TARGET) RELEASE=$(RELEASE)
+	cd $(LIBSTART_SUBMODULE); make TARGET=$(TARGET) RELEASE=$(RELEASE)
 
 clean:
+	cd $(LIBSTART_SUBMODULE); make clean TARGET=$(TARGET)
 	rm -rf *.o *.exe *.out $(OBJDIR)
