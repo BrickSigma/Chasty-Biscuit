@@ -25,11 +25,28 @@ void game_loop(void *app_ctx) {
     Application *app = (Application *)app_ctx;
     
     while (SDL_PollEvent(&(app->event))) {
-        if (app->event.type == SDL_QUIT) {
+        switch (app->event.type) {
+        case SDL_QUIT:
             app->is_running = false;
             return;
+
+        // Needed when resizing the window on Linux + Wayland
+        case SDL_WINDOWEVENT:
+            if (app->event.window.event == SDL_WINDOWEVENT_SIZE_CHANGED ||
+                app->event.window.event == SDL_WINDOWEVENT_RESIZED) {
+                // Refresh the window surface
+                app->surface = SDL_GetWindowSurface(app->window);
+            }
+            break;
+        
+        default:
+            break;
         }
     }
+
+    SDL_FillRect(app->surface, NULL, SDL_MapRGB(app->surface->format, 200, 200, 200));
+
+    SDL_UpdateWindowSurface(app->window);
 }
 
 int main(int argc, char *argv[]) {

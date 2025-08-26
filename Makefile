@@ -5,7 +5,7 @@ TARGET ?= DESKTOP
 RELEASE ?= DEBUG
 
 # Folder containing the source code
-SRC_DIR = ./chastybiscuit
+SRC_DIR = ./ChastyBiscuit
 
 # Build output folder
 OBJDIR := objects
@@ -87,4 +87,4 @@ $(OBJDIR)/%.o: $(SRC_DIR)/%.c
 	$(CC) -c $< -o $@ $(CFLAGS) $(LDFLAGS) $(INCLUDE)
 
 clean:
-	rm -rf *.o *.exe *.out $(OBJDIR)
+	rm -rf *.o *.exe *.out $(OBJDIR) *.js *.wasm *.data
