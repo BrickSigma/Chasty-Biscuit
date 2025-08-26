@@ -3,7 +3,9 @@
 
 namespace application {
 bool Application::CreateWindow(const char *title, int width, int height) {
-    this->window = SDL_CreateWindow(title, width, height, SDL_WINDOW_RESIZABLE);
+    this->window =
+        SDL_CreateWindow(title, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
+                         width, height, SDL_WINDOW_RESIZABLE);
     if (this->window == nullptr) {
         printf("Could not create window: %s\n", SDL_GetError());
         return false;

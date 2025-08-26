@@ -1,7 +1,7 @@
 #ifdef _MSC_VER
 #include <SDL.h>
 #else
-#include <SDL3/SDL.h>
+#include <SDL2/SDL.h>
 #endif
 
 #include <stdbool.h>
@@ -25,7 +25,7 @@ void game_loop(void *app_ctx) {
     Application *app = (Application *)app_ctx;
     
     while (SDL_PollEvent(&(app->event))) {
-        if (app->event.type == SDL_EVENT_QUIT) {
+        if (app->event.type == SDL_QUIT) {
             app->is_running = false;
             return;
         }

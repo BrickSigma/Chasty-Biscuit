@@ -43,19 +43,19 @@ OBJS += $(patsubst $(SRC_DIR)/%.cpp, $(OBJDIR)/%.o, $(CPP_SRCS)) $(patsubst $(SR
 # Setup web and desktop configurations
 ifeq ($(TARGET), WEB)
 	CC = em++
-	LDFLAGS += -s USE_SDL=3 -s USE_SDL_IMAGE=3 -s USE_SDL_TTF=3 -s SDL2_IMAGE_FORMATS='["png"]' -s WASM=1  --preload-file resources/* -Wno-unused-command-line-argument
+	LDFLAGS += -s USE_SDL=2 -s USE_SDL_IMAGE=2 -s USE_SDL_TTF=2 -s SDL2_IMAGE_FORMATS='["png"]' -s WASM=1  --preload-file resources/* -Wno-unused-command-line-argument
 
 	OUTPUT = index.js
 else ifeq ($(OS_NAME), Linux)
-	LDFLAGS += `pkg-config --libs --cflags sdl3 SDL3_image SDL3_ttf` -lm
+	LDFLAGS += `pkg-config --libs --cflags sdl2 SDL2_image SDL2_ttf` -lm
 
 	OUTPUT = $(OUTPUT_NAME).out
 else ifeq ($(OS_NAME), Darwin)
-	LDFLAGS += `pkg-config --libs --cflags sdl3 SDL3_image SDL3_ttf` -lm
+	LDFLAGS += `pkg-config --libs --cflags sdl2 SDL2_image SDL2_ttf` -lm
 
 	OUTPUT = $(OUTPUT_NAME).out
 else
-	LDFLAGS += `pkg-config --libs --cflags sdl3 | sed 's/-mwindows//'` -lm -lSDL3_image -lSDL3_image
+	LDFLAGS += `pkg-config --libs --cflags sdl2 SDL2_image SDL2_ttf | sed 's/-mwindows//'` -lm
 
 	OUTPUT = $(OUTPUT_NAME).exe
 endif
@@ -87,5 +87,4 @@ $(OBJDIR)/%.o: $(SRC_DIR)/%.c
 	$(CC) -c $< -o $@ $(CFLAGS) $(LDFLAGS) $(INCLUDE)
 
 clean:
-	cd $(LIBSTART_SUBMODULE); make clean TARGET=$(TARGET)
 	rm -rf *.o *.exe *.out $(OBJDIR)
