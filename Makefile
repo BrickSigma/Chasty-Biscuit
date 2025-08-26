@@ -5,7 +5,7 @@ TARGET ?= DESKTOP
 RELEASE ?= DEBUG
 
 # Folder containing the source code
-SRC_DIR = ./ChastyBiscuit
+SRC_DIR = ./chastybiscuit
 
 # Build output folder
 OBJDIR := objects
@@ -21,11 +21,9 @@ OBJS :=
 
 OUTPUT :=
 
-LIBSTART_SUBMODULE = start
-
-LDFLAGS := -L $(LIBSTART_SUBMODULE) -lstart -Wl,-rpath,$(LIBSTART_SUBMODULE)
+LDFLAGS := 
 CFLAGS := -Wall -Werror -Wextra #-fsanitize=address
-INCLUDE := -I $(SRC_DIR) -I $(LIBSTART_SUBMODULE)/include
+INCLUDE := -I $(SRC_DIR)
 
 # Get the source files and setup other variables depending on the OS
 ifeq ($(OS_NAME), Linux)
@@ -35,8 +33,8 @@ else ifeq ($(OS_NAME), Darwin)
 	C_SRCS  += $(shell find $(SRC_DIR) -type f -name '*.c')
 	CPP_SRCS += $(shell find $(SRC_DIR) -type f -name '*.cpp')
 else
-	C_SRCS += $(wildcard $(SRC_DIR)/**/*.c)
-	CPP_SRCS += $(wildcard $(SRC_DIR)/**/*.cpp)
+	C_SRCS += $(wildcard $(SRC_DIR)/*.c) $(wildcard $(SRC_DIR)/*/*.c)
+	CPP_SRCS += $(wildcard $(SRC_DIR)/*.cpp) $(wildcard $(SRC_DIR)/*/*.cpp)
 endif
 
 # Setup the object files
@@ -45,19 +43,19 @@ OBJS += $(patsubst $(SRC_DIR)/%.cpp, $(OBJDIR)/%.o, $(CPP_SRCS)) $(patsubst $(SR
 # Setup web and desktop configurations
 ifeq ($(TARGET), WEB)
 	CC = em++
-	LDFLAGS += -s USE_SDL=2 -s USE_SDL_IMAGE=2 -s USE_SDL_TTF=2 -s SDL2_IMAGE_FORMATS='["png"]' -s WASM=1  --preload-file resources/* -Wno-unused-command-line-argument
+	LDFLAGS += -s USE_SDL=3 -s USE_SDL_IMAGE=3 -s USE_SDL_TTF=3 -s SDL2_IMAGE_FORMATS='["png"]' -s WASM=1  --preload-file resources/* -Wno-unused-command-line-argument
 
 	OUTPUT = index.js
 else ifeq ($(OS_NAME), Linux)
-	LDFLAGS += `pkg-config --libs --cflags sdl2 SDL2_image libconfig SDL2_ttf` -lm
+	LDFLAGS += `pkg-config --libs --cflags sdl3 SDL3_image SDL3_ttf` -lm
 
 	OUTPUT = $(OUTPUT_NAME).out
 else ifeq ($(OS_NAME), Darwin)
-	LDFLAGS += `pkg-config --libs --cflags sdl2 SDL2_image libconfig SDL2_ttf` -lm
+	LDFLAGS += `pkg-config --libs --cflags sdl3 SDL3_image SDL3_ttf` -lm
 
 	OUTPUT = $(OUTPUT_NAME).out
 else
-	LDFLAGS += `pkg-config --libs --cflags sdl2 SDL2_image libconfig SDL2_ttf | sed 's/-mwindows//'` -lm
+	LDFLAGS += `pkg-config --libs --cflags sdl3 | sed 's/-mwindows//'` -lm -lSDL3_image -lSDL3_image
 
 	OUTPUT = $(OUTPUT_NAME).exe
 endif
@@ -74,7 +72,7 @@ endif
 
 .PHONY: all clean
 
-all: libstart $(OUTPUT)
+all: $(OUTPUT)
 
 $(OUTPUT): $(OBJS)
 	@mkdir -p $(@D)
@@ -87,9 +85,6 @@ $(OBJDIR)/%.o: $(SRC_DIR)/%.cpp
 $(OBJDIR)/%.o: $(SRC_DIR)/%.c
 	@mkdir -p $(@D)
 	$(CC) -c $< -o $@ $(CFLAGS) $(LDFLAGS) $(INCLUDE)
-
-libstart:
-	cd $(LIBSTART_SUBMODULE); make TARGET=$(TARGET) RELEASE=$(RELEASE)
 
 clean:
 	cd $(LIBSTART_SUBMODULE); make clean TARGET=$(TARGET)

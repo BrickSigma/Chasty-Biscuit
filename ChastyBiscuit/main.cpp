@@ -1,109 +1,65 @@
 #ifdef _MSC_VER
 #include <SDL.h>
-#include <SDL_ttf.h>
 #else
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_ttf.h>
+#include <SDL3/SDL.h>
 #endif
 
 #include <stdbool.h>
-
-#include <Application.h>
-#include <Clock.h>
-#include <Text.h>
-#include <Window.h>
+#include <stdio.h>
 
 #ifdef __EMSCRIPTEN__
 #include <emscripten.h>
 #endif
 
-typedef struct AppCtx
-{
-	SDL_Event event;
-	SDL_Renderer* r;
+#include <setup.hpp>
+#include <application.hpp>
 
-	TTF_Font* font;
-	Text* text;
-	SDL_Rect text_pos;
-	char fps_buf[32];
-} AppCtx;
+using namespace application;
 
 /* ================================================================ */
 
 /**
  * Main game loop code
  */
-void game_loop(void* app_ctx)
-{
-	AppCtx* ctx = (AppCtx*)app_ctx;
-
-	while (SDL_PollEvent(&(ctx->event)))
-	{
-
-		switch (ctx->event.type)
-		{
-
-		case SDL_QUIT:
-			App_stop();
-			break;
-		}
-	}
-
-	/* ================ */
-
-	SDL_SetRenderDrawColor(ctx->r, 255, 0, 0, 255);
-	SDL_RenderClear(ctx->r);
-
-	Text_draw(ctx->text, &ctx->text_pos);
-
-	sprintf(ctx->fps_buf, "FPS: %d", get_fps());
-	Text_update(ctx->text, ctx->fps_buf);
-
-	App_render();
-
-	// printf("Delta time: %f\n", get_delta());
+void game_loop(void *app_ctx) {
+    Application *app = (Application *)app_ctx;
+    
+    while (SDL_PollEvent(&(app->event))) {
+        if (app->event.type == SDL_EVENT_QUIT) {
+            app->is_running = false;
+            return;
+        }
+    }
 }
 
-int main(int argc, char* argv[])
-{
-	(void)argc;
-	(void)argv;
-	/* ================================ */
+int main(int argc, char *argv[]) {
+    (void)argc;
+    (void)argv;
 
-	AppCtx ctx{};
+    Application app;
 
-	const char* title = "Chasty Biscuit";
-	char buff[20];
-	strncpy(buff, title, 20);
-	ApplicationConfig app_config = { buff,640,480,SDL_WINDOW_SHOWN, SDL_RENDERER_ACCELERATED };
+    // Initialize SDL
+    if (!setup::SDL_Startup()) {
+        printf("Couldn't initialize SDL: %s\n", SDL_GetError());
+        goto EXIT_SDL;
+    }
 
-	Start();
-	App_init(&app_config);
-
-	ctx.r = get_context();
-
-	ctx.font = TTF_OpenFont("./resources/8bitOperatorPlus8-Regular.ttf", 24);
-	SDL_Color text_color = { 0, 0, 0, 255 };
-	ctx.text = Text_new(ctx.r, ctx.font, &text_color, "FPS: 60");
-	ctx.text_pos = SDL_Rect{ 32, 32, ctx.text->width, ctx.text->height };
-
-	App_setFPS(45);
+    if (!app.CreateWindow("Chasty Biscuits", 640, 480)) {
+        goto END_APP;
+    }
 
 #ifdef __EMSCRIPTEN__
-	emscripten_set_main_loop_arg(game_loop, &ctx, 0, true);
+    emscripten_set_main_loop_arg(game_loop, &app, 0, true);
 #else
-	while (App_isRunning())
-		game_loop(&ctx);
+    while (app.is_running)
+        game_loop(&app);
 #endif
 
-	/* ================================ */
+END_APP:
+    app.CloseWindow();
 
-	TTF_CloseFont(ctx.font);
-	Text_destroy(&(ctx.text));
+EXIT_SDL:
+    setup::SDL_QuitGame();
 
-	App_quit();
-	Stop();
-
-	/* ======== */
-	return 0;
+    return 0;
 }
