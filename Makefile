@@ -5,7 +5,7 @@ TARGET ?= DESKTOP
 RELEASE ?= DEBUG
 
 # Folder containing the source code
-SRC_DIR = ./ChastyBiscuit
+SRC_DIR = ./chastybiscuit
 
 # Build output folder
 OBJDIR := objects

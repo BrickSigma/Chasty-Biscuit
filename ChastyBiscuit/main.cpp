@@ -11,8 +11,8 @@
 #include <emscripten.h>
 #endif
 
-#include <setup.hpp>
 #include <application.hpp>
+#include <setup.hpp>
 
 using namespace application;
 
@@ -23,12 +23,22 @@ using namespace application;
  */
 void game_loop(void *app_ctx) {
     Application *app = (Application *)app_ctx;
-    
+
+    if (!app->is_running) {
+        app->CloseWindow();
+        setup::SDL_QuitGame();
+#ifdef __EMSCRIPTEN__
+        emscripten_cancel_main_loop();
+#else
+        exit(0);
+#endif
+    }
+
     while (SDL_PollEvent(&(app->event))) {
         switch (app->event.type) {
         case SDL_QUIT:
             app->is_running = false;
-            return;
+            break;
 
         // Needed when resizing the window on Linux + Wayland
         case SDL_WINDOWEVENT:
@@ -38,13 +48,14 @@ void game_loop(void *app_ctx) {
                 app->surface = SDL_GetWindowSurface(app->window);
             }
             break;
-        
+
         default:
             break;
         }
     }
 
-    SDL_FillRect(app->surface, NULL, SDL_MapRGB(app->surface->format, 200, 200, 200));
+    SDL_FillRect(app->surface, NULL,
+                 SDL_MapRGB(app->surface->format, 200, 200, 200));
 
     SDL_UpdateWindowSurface(app->window);
 }
@@ -58,25 +69,22 @@ int main(int argc, char *argv[]) {
     // Initialize SDL
     if (!setup::SDL_Startup()) {
         printf("Couldn't initialize SDL: %s\n", SDL_GetError());
-        goto EXIT_SDL;
+        setup::SDL_QuitGame();
+        exit(-1);
     }
 
     if (!app.CreateWindow("Chasty Biscuits", 640, 480)) {
-        goto END_APP;
+        app.CloseWindow();
+        setup::SDL_QuitGame();
+        exit(-1);
     }
 
 #ifdef __EMSCRIPTEN__
     emscripten_set_main_loop_arg(game_loop, &app, 0, true);
 #else
-    while (app.is_running)
+    while (true)
         game_loop(&app);
 #endif
-
-END_APP:
-    app.CloseWindow();
-
-EXIT_SDL:
-    setup::SDL_QuitGame();
 
     return 0;
 }
