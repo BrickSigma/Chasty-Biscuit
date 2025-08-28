@@ -2,8 +2,15 @@
 
 #include <string.h>
 
+#include <menu/menu.hpp>
+
 namespace scene_manager {
-	SceneManager::SceneManager(SDL_Window* window, SDL_Renderer* renderer) : window(window), renderer(renderer) {}
+	SceneManager::SceneManager(SDL_Window* window, SDL_Renderer* renderer) : window(window), renderer(renderer) {
+		Menu* menu = new Menu("menu", this->renderer);
+
+		this->AddScene(menu);
+		this->PushRunningScene("menu", true);
+	}
 
 	void SceneManager::UpdateRenderer() {
 		this->renderer = SDL_GetRenderer(this->window);
@@ -27,6 +34,7 @@ namespace scene_manager {
 
 		for (int i = 0; i < (int)this->scenes.size(); i++) {
 			if (strcmp(this->scenes[i]->id, id) == 0) {
+				index = i;
 				break;
 			}
 		}
@@ -45,6 +53,7 @@ namespace scene_manager {
 		// Remove the scene from the array of running scenes as well
 		for (int i = 0; i < (int)this->running_scenes.size(); i++) {
 			if (strcmp(this->running_scenes[i]->id, id) == 0) {
+				index = i;
 				break;
 			}
 		}
@@ -65,7 +74,9 @@ namespace scene_manager {
 		int index = -1;
 
 		for (size_t i = 0; i < this->scenes.size(); i++) {
+			int x = strcmp(this->scenes[i]->id, id);
 			if (strcmp(this->scenes[i]->id, id) == 0) {
+				index = i;
 				break;
 			}
 		}

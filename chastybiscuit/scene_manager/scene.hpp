@@ -7,6 +7,8 @@
 #include <SDL2/SDL.h>
 #endif
 
+#include <stdio.h>
+
 constexpr int MAX_SCENES = 5;  // Maximum number of scens that can run in parallel.
 
 namespace scene_manager {
@@ -16,7 +18,7 @@ namespace scene_manager {
 	typedef struct NextScene {
 		int no_scenes_changed;  // Number of scenes to be pushed onto the running scenes array.
 		const char* scenes[MAX_SCENES];  // Array of scene IDs to replace the stack with.
-		const bool reload_scenes[MAX_SCENES];  // Array used to indicate whether a scene should be reloaded or not.
+		bool reload_scenes[MAX_SCENES];  // Array used to indicate whether a scene should be reloaded or not.
 		bool exit;  // Used to indicate whether or not to exit the app if the user quits mid-scene.
 		bool window_resized;  // Indicates if the window resized.
 	} NextScene;
@@ -29,7 +31,7 @@ namespace scene_manager {
 		// Scene ID: used for locating scenes in the scene manager
 		const char* id = nullptr;
 
-		Scene(SDL_Renderer* renderer) : renderer(renderer) {}
+		Scene(const char* id, SDL_Renderer* renderer) : renderer(renderer), id(id) {}
 
 		virtual ~Scene() = default;
 

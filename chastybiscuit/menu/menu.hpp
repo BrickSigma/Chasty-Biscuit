@@ -6,14 +6,16 @@
 using namespace scene_manager;
 
 class Menu : public Scene {
+private:
+	SDL_Event event{};
 public:
-	void Reload() override {}
+	Menu(const char* id, SDL_Renderer* renderer);
 
-	NextScene EventLoop() override {
-		return NextScene{};
-	}
+	void Reload() override;
 
-	void RenderLoop() override {}
+	NextScene EventLoop() override;
+
+	void RenderLoop() override;
 };
 
 #endif  // MENU_HPP
