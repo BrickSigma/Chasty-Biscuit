@@ -32,7 +32,32 @@ namespace scene_manager {
 
 		// A fall-back scene rendering loop in case no scenes are running
 		NextScene RunFallBackScene() const;
+
+		// Hold the current window width and height sizes to scale the output
+		int window_width = 0, window_height = 0;
+
+		/*
+		Render texture setup:
+
+		We need to be able to scale the canvas when the window resizes
+		so that the aspect ratio of the game remains constant for a good look and feel
+		*/
+		SDL_Texture* screen_texture = nullptr;
+
+		/*
+		Timing control and frame limitting
+		*/
+		Uint64 start_frame = 0;
+		Uint64 end_frame = 0;
+
+		// Frame rate of the game 
+		Uint64 fps = 30;
+		Uint64 frame_time = 1000 / 30;
+
+		// Used to limit the framerate
+		void Tick();
 	public:
+		// Window
 		SDL_Window* window = nullptr;
 		// Window rendering context
 		SDL_Renderer* renderer = nullptr;
@@ -53,7 +78,7 @@ namespace scene_manager {
 
 		@param scene - The scene to add to the scene manager
 		*/
-		void AddScene(Scene *scene);
+		void AddScene(Scene* scene);
 
 		/*
 		Remove a scene from the scene manager
@@ -77,7 +102,7 @@ namespace scene_manager {
 		Runs the scene manager in the main game loop
 
 		@returns `true` when the app needs to quit/exit. Used for memory management
-		*/ 
+		*/
 		bool Run();
 
 		// Closes the scene manager and frees all the allocated scenes

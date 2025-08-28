@@ -6,6 +6,17 @@
 
 namespace scene_manager {
 	SceneManager::SceneManager(SDL_Window* window, SDL_Renderer* renderer) : window(window), renderer(renderer) {
+		// Get the window width and height
+		SDL_GetWindowSize(window, &this->window_width, &this->window_height);
+
+		// Setup the render texture
+		this->screen_texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGB888, SDL_TEXTUREACCESS_TARGET, window_width, window_height);
+		if (this->screen_texture == nullptr) {
+			printf("SceneManager: couldn't create sceen_texture: %s\n", SDL_GetError());
+			exit(-1);
+		}
+
+		// Setup the scenes for the game...
 		Menu* menu = new Menu("menu", this->renderer);
 
 		this->AddScene(menu);
@@ -18,6 +29,8 @@ namespace scene_manager {
 			printf("Could not reload renderer: %s\n", SDL_GetError());
 			exit(-1);
 		}
+
+		SDL_GetWindowSize(this->window, &this->window_width, &this->window_height);
 
 		// Update all the scene renderers
 		for (Scene* scene : this->scenes) {
@@ -73,8 +86,7 @@ namespace scene_manager {
 	void SceneManager::PushRunningScene(const char* id, bool reload_scene) {
 		int index = -1;
 
-		for (size_t i = 0; i < this->scenes.size(); i++) {
-			int x = strcmp(this->scenes[i]->id, id);
+		for (int i = 0; i < (int)this->scenes.size(); i++) {
 			if (strcmp(this->scenes[i]->id, id) == 0) {
 				index = i;
 				break;
@@ -93,6 +105,16 @@ namespace scene_manager {
 		}
 	}
 
+	void SceneManager::Tick() {
+		end_frame = SDL_GetTicks64();
+		Uint64 time_passed = end_frame - start_frame;
+		printf("%ld %ld\n", (long int)time_passed, (long int)frame_time);
+		if (time_passed < frame_time) {
+			SDL_Delay(frame_time - time_passed);
+		}
+		start_frame = SDL_GetTicks64();
+	}
+
 	bool SceneManager::Run() {
 		size_t no_scenes = this->running_scenes.size();
 
@@ -107,6 +129,9 @@ namespace scene_manager {
 
 			return next_scene.exit;
 		}
+
+		// Switch to the screen texture for rendering
+		SDL_SetRenderTarget(this->renderer, this->screen_texture);
 
 		// Run the render loop for all scenes except the last one
 		for (size_t i = 0; i < no_scenes - 1; i++) {
@@ -129,8 +154,36 @@ namespace scene_manager {
 			this->UpdateRenderer();
 		}
 
+		// Switch back to the window for rendering and draw the screen, scaled up/down
+		SDL_SetRenderTarget(renderer, NULL);
+
+		SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+		SDL_RenderClear(renderer);
+
+		// Scale the screen texture accordingly
+		int scaled_width, scaled_height;
+		int screen_x, screen_y;
+		if ((double)window_width / (double)window_height < 1.5f) {
+			scaled_width = window_width;
+			scaled_height = (window_width * 2) / 3;
+			screen_x = 0;
+			screen_y = (window_height / 2) - (scaled_height / 2);
+		}
+		else {
+			scaled_width = (window_height * 3) / 2;
+			scaled_height = window_height;
+			screen_x = (window_width/2) - (scaled_width/2);
+			screen_y = 0;
+		}
+		SDL_Rect screen_rect = { screen_x, screen_y, scaled_width, scaled_height };
+
+		SDL_RenderCopy(renderer, screen_texture, NULL, &screen_rect);
+
 		// Render to the screen
 		SDL_RenderPresent(this->renderer);
+
+		// Run the clock to limit the framerate
+		this->Tick();
 
 		// Check if the scene system has been updated or not.
 		if (next_scene.no_scenes_changed == 0) {
@@ -180,6 +233,9 @@ namespace scene_manager {
 	}
 
 	void SceneManager::CloseSceneManager() {
+		// Free the screen texture
+		SDL_DestroyTexture(this->screen_texture);
+
 		// Free all the scenes from memory
 		for (Scene* scene : this->scenes) {
 			delete scene;

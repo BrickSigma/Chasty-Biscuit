@@ -9,6 +9,9 @@
 
 #include <scene_manager/scene_manager.hpp>
 
+constexpr unsigned int SCREEN_WIDTH = 816;
+constexpr unsigned int SCREEN_HEIGHT = 544;
+
 namespace application {
 	/**
 	 * Application context class.

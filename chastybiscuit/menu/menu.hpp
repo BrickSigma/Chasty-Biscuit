@@ -7,7 +7,7 @@ using namespace scene_manager;
 
 class Menu : public Scene {
 private:
-	SDL_Event event{};
+	SDL_Rect rect = { 0, 0, 50, 50 };
 public:
 	Menu(const char* id, SDL_Renderer* renderer);
 

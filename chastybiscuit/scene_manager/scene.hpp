@@ -27,6 +27,9 @@ namespace scene_manager {
 	protected:
 		// Rendering context
 		SDL_Renderer* renderer = nullptr;
+
+		// Event variable for SDL_PollEvents
+		SDL_Event event{};
 	public:
 		// Scene ID: used for locating scenes in the scene manager
 		const char* id = nullptr;
