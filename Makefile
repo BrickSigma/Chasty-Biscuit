@@ -45,7 +45,7 @@ ifeq ($(TARGET), WEB)
 	CC = em++
 	LDFLAGS += -s USE_SDL=2 -s USE_SDL_IMAGE=2 -s USE_SDL_TTF=2 -s SDL2_IMAGE_FORMATS='["png"]' -s WASM=1  --preload-file resources/* -Wno-unused-command-line-argument
 
-	OUTPUT = index.js
+	OUTPUT = index.html
 else ifeq ($(OS_NAME), Linux)
 	LDFLAGS += `pkg-config --libs --cflags sdl2 SDL2_image SDL2_ttf` -lm
 
@@ -62,7 +62,7 @@ endif
 
 # Setup CFLAGS for either release or debug
 ifeq ($(RELEASE), DEBUG)
-	CFLAGS += -g -O0
+	CFLAGS += -g -O0 -Wno-unused-private-field
 ifeq ($(TARGET), WEB)
 	CFLAGS += --emrun
 endif

@@ -8,6 +8,8 @@
 #include <SDL2/SDL_image.h>
 #endif
 
+#include <stdio.h>
+
 namespace setup {
 	bool SDL_Startup() {
 		if (SDL_Init(SDL_INIT_VIDEO) != 0) {

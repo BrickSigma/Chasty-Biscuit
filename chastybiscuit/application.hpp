@@ -7,32 +7,34 @@
 #include <SDL2/SDL.h>
 #endif
 
+#include <scene_manager/scene_manager.hpp>
+
 namespace application {
+	/**
+	 * Application context class.
+	 *
+	 * Used to share the application context between scenes.
+	 */
+	class Application {
+	public:
+		SDL_Window* window = nullptr;
 
-/**
- * Application context class.
- *
- * Used to share the application context between scenes.
- */
-class Application {
-  public:
-    SDL_Window *window;
-    SDL_Surface *surface;
-    SDL_Event event;
+		// Scene manager for the game
+		scene_manager::SceneManager scene_manager;
 
-    // Used in the main game loop
-    bool is_running = false;
+		// Used in the main game loop
+		bool is_running = false;
 
-    /**
-     * Create a new SDL window
-     */
-    bool CreateWindow(const char *title, int width, int height);
+		/**
+		 * Create a new SDL window and sets up the scenes and scene manager
+		 */
+		bool CreateWindow(const char* title, int width, int height);
 
-    /**
-     * Closes the SDL window
-     */
-    void CloseWindow();
-};
+		/**
+		 * Closes the SDL window
+		 */
+		void Close();
+	};
 } // namespace application
 
 #endif // APPLICATION_HPP

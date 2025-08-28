@@ -24,12 +24,27 @@
     <ClCompile Include="chastybiscuit\setup.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="chastybiscuit\scene_manager\scene_manager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="chastybiscuit\menu\menu.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="chastybiscuit\application.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="chastybiscuit\setup.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="chastybiscuit\scene_manager\scene_manager.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="chastybiscuit\scene_manager\scene.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="chastybiscuit\menu\menu.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
