@@ -24,13 +24,10 @@ NextScene Menu::EventLoop() {
 		}
 	}
 
-	SDL_PumpEvents();
-	const Uint8* keys = SDL_GetKeyboardState(NULL);
-
 	return next_scene;
 }
 
 void Menu::RenderLoop() {
-	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+	SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
 	SDL_RenderClear(renderer);
 }

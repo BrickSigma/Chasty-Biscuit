@@ -53,7 +53,7 @@ int main(int argc, char *argv[]) {
         exit(-1);
     }
 
-    if (!app.CreateWindow("Chasty Biscuits", SCREEN_WIDTH, SCREEN_HEIGHT)) {
+    if (!app.CreateWindow("Chasty Biscuits", WINDOW_WIDTH, WINDOW_HEIGHT)) {
         app.Close();
         setup::SDL_QuitGame();
         exit(-1);

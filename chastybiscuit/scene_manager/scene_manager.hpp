@@ -11,6 +11,9 @@
 
 #include <vector>
 
+constexpr int SCREEN_WIDTH = 256;
+constexpr int SCREEN_HEIGHT = 192;
+
 namespace scene_manager {
 	/**
 	Main scene manager: handles different scenes and their event and rendering loops.

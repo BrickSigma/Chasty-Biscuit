@@ -162,14 +162,14 @@ namespace scene_manager {
 		// Scale the screen texture accordingly
 		int scaled_width, scaled_height;
 		int screen_x, screen_y;
-		if ((double)window_width / (double)window_height < 1.5f) {
+		if ((double)window_width / (double)window_height < (double)(4/3)) {
 			scaled_width = window_width;
-			scaled_height = (window_width * 2) / 3;
+			scaled_height = (window_width * 3) / 4;
 			screen_x = 0;
 			screen_y = (window_height / 2) - (scaled_height / 2);
 		}
 		else {
-			scaled_width = (window_height * 3) / 2;
+			scaled_width = (window_height * 4) / 3;
 			scaled_height = window_height;
 			screen_x = (window_width/2) - (scaled_width/2);
 			screen_y = 0;
