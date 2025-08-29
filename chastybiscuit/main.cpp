@@ -12,6 +12,7 @@
 #endif
 
 #include <application.hpp>
+#include<controller/controller.hpp>
 #include <setup.hpp>
 
 using namespace application;
@@ -25,6 +26,8 @@ void game_loop(void *app_ctx) {
     Application *app = (Application *)app_ctx;
 
     if (!app->is_running) {
+        // Cleanup...
+        Controller::Disconnect();
         app->Close();
         setup::SDL_QuitGame();
 #ifdef __EMSCRIPTEN__
@@ -55,6 +58,9 @@ int main(int argc, char *argv[]) {
         setup::SDL_QuitGame();
         exit(-1);
     }
+
+    // Setup the game controller
+    Controller::Connect();
 
 #ifdef __EMSCRIPTEN__
     emscripten_set_main_loop_arg(game_loop, &app, 0, true);

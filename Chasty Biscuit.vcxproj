@@ -136,6 +136,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="chastybiscuit\application.cpp" />
+    <ClCompile Include="chastybiscuit\controller\controller.cpp" />
     <ClCompile Include="chastybiscuit\main.cpp" />
     <ClCompile Include="chastybiscuit\menu\menu.cpp" />
     <ClCompile Include="chastybiscuit\scene_manager\scene_manager.cpp" />
@@ -143,6 +144,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="chastybiscuit\application.hpp" />
+    <ClInclude Include="chastybiscuit\controller\controller.hpp" />
     <ClInclude Include="chastybiscuit\menu\menu.hpp" />
     <ClInclude Include="chastybiscuit\scene_manager\scene.hpp" />
     <ClInclude Include="chastybiscuit\scene_manager\scene_manager.hpp" />

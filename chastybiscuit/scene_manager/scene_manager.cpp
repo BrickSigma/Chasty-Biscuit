@@ -108,7 +108,6 @@ namespace scene_manager {
 	void SceneManager::Tick() {
 		end_frame = SDL_GetTicks64();
 		Uint64 time_passed = end_frame - start_frame;
-		printf("%ld %ld\n", (long int)time_passed, (long int)frame_time);
 		if (time_passed < frame_time) {
 			SDL_Delay(frame_time - time_passed);
 		}
