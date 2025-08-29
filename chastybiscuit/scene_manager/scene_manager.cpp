@@ -10,7 +10,7 @@ namespace scene_manager {
 		SDL_GetWindowSize(window, &this->window_width, &this->window_height);
 
 		// Setup the render texture
-		this->screen_texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGB888, SDL_TEXTUREACCESS_TARGET, window_width, window_height);
+		this->screen_texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGB888, SDL_TEXTUREACCESS_TARGET, SCREEN_WIDTH, SCREEN_HEIGHT);
 		if (this->screen_texture == nullptr) {
 			printf("SceneManager: couldn't create sceen_texture: %s\n", SDL_GetError());
 			exit(-1);
@@ -109,7 +109,7 @@ namespace scene_manager {
 		end_frame = SDL_GetTicks64();
 		Uint64 time_passed = end_frame - start_frame;
 		if (time_passed < frame_time) {
-			SDL_Delay(frame_time - time_passed);
+			SDL_Delay((Uint32)(frame_time - time_passed));
 		}
 		start_frame = SDL_GetTicks64();
 	}

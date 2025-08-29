@@ -8,12 +8,12 @@ namespace setup {
 /**
  * Sets up SDL
  */
-bool SDL_Startup();
+bool Startup();
 
 /**
  * Quits SDL
  */
-void SDL_QuitGame();
+void QuitGame();
 } // namespace setup
 
 #endif // SETUP_HPP

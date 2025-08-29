@@ -8,6 +8,10 @@ SDL_GameController* Controller::controller = nullptr;
 bool Controller::is_a_pressed = false;
 
 void Controller::Connect() {
+	if (Controller::controller_connected) {
+		return;
+	}
+
 	int no_joysticks = SDL_NumJoysticks();
 
 	if (no_joysticks == 0) {

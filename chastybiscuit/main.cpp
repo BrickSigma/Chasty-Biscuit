@@ -12,7 +12,8 @@
 #endif
 
 #include <application.hpp>
-#include<controller/controller.hpp>
+#include <controller/controller.hpp>
+#include <font/font.hpp>
 #include <setup.hpp>
 
 using namespace application;
@@ -22,52 +23,54 @@ using namespace application;
 /**
  * Main game loop code
  */
-void game_loop(void *app_ctx) {
-    Application *app = (Application *)app_ctx;
+void game_loop(void* app_ctx) {
+	Application* app = (Application*)app_ctx;
 
-    if (!app->is_running) {
-        // Cleanup...
-        Controller::Disconnect();
-        app->Close();
-        setup::SDL_QuitGame();
+	if (!app->is_running) {
+		// Cleanup...
+		Font::CloseFonts();
+		Controller::Disconnect();
+		app->Close();
+		setup::QuitGame();
+
 #ifdef __EMSCRIPTEN__
-        emscripten_cancel_main_loop();
+		emscripten_cancel_main_loop();
 #else
-        exit(0);
+		exit(0);
 #endif
-    }
-       
-    app->is_running = !app->scene_manager.Run();
+	}
+
+	app->is_running = !app->scene_manager.Run();
 }
 
-int main(int argc, char *argv[]) {
-    (void)argc;
-    (void)argv;
+int main(int argc, char* argv[]) {
+	(void)argc;
+	(void)argv;
 
-    Application app = Application();
+	Application app = Application();
 
-    // Initialize SDL
-    if (!setup::SDL_Startup()) {
-        printf("Couldn't initialize SDL: %s\n", SDL_GetError());
-        setup::SDL_QuitGame();
-        exit(-1);
-    }
+	// Initialize SDL
+	if (!setup::Startup()) {
+		printf("Couldn't initialize SDL: %s\n", SDL_GetError());
+		setup::QuitGame();
+		exit(-1);
+	}
 
-    if (!app.CreateWindow("Chasty Biscuits", WINDOW_WIDTH, WINDOW_HEIGHT)) {
-        app.Close();
-        setup::SDL_QuitGame();
-        exit(-1);
-    }
+	if (!app.CreateWindow("Chasty Biscuits", WINDOW_WIDTH, WINDOW_HEIGHT)) {
+		app.Close();
+		setup::QuitGame();
+		exit(-1);
+	}
 
-    // Setup the game controller
-    Controller::Connect();
+	// Setup the game controller
+	Controller::Connect();
 
 #ifdef __EMSCRIPTEN__
-    emscripten_set_main_loop_arg(game_loop, &app, 0, true);
+	emscripten_set_main_loop_arg(game_loop, &app, 0, true);
 #else
-    while (true)
-        game_loop(&app);
+	while (true)
+		game_loop(&app);
 #endif
 
-    return 0;
+	return 0;
 }
