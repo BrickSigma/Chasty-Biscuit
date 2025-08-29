@@ -36,16 +36,28 @@ void Controller::Disconnect() {
 }
 
 ControllerAxis Controller::GetAxis() {
+	if (!controller_connected) {
+		return ControllerAxis{ 0, 0 };
+	}
+
 	Sint16 x = SDL_GameControllerGetAxis(Controller::controller, SDL_CONTROLLER_AXIS_LEFTX);
 	Sint16 y = SDL_GameControllerGetAxis(Controller::controller, SDL_CONTROLLER_AXIS_LEFTY);
 	return ControllerAxis{x, y};
 }
 
 bool Controller::GetButton(SDL_GameControllerButton button) {
+	if (!controller_connected) {
+		return false;
+	}
+
 	return SDL_GameControllerGetButton(Controller::controller, button);
 }
 
 bool Controller::IsAPressed() {
+	if (!controller_connected) {
+		return false;
+	}
+
 	if (SDL_GameControllerGetButton(Controller::controller, SDL_CONTROLLER_BUTTON_A) && !Controller::is_a_pressed) {
 		Controller::is_a_pressed = true;
 		return true;
@@ -56,6 +68,10 @@ bool Controller::IsAPressed() {
 }
 
 bool Controller::IsStartPressed() {
+	if (!controller_connected) {
+		return false;
+	}
+
 	if (SDL_GameControllerGetButton(Controller::controller, SDL_CONTROLLER_BUTTON_START) && !Controller::is_start_pressed) {
 		Controller::is_start_pressed = true;
 		return true;
@@ -67,6 +83,10 @@ bool Controller::IsStartPressed() {
 }
 
 bool Controller::IsLeftJoystickPressedUp() {
+	if (!controller_connected) {
+		return false;
+	}
+
 	Sint16 axis = SDL_GameControllerGetAxis(Controller::controller, SDL_CONTROLLER_AXIS_LEFTY);
 	if (axis <= -CONTROLLER_PUSH && !Controller::is_left_joystick_pressed_up) {
 		Controller::is_left_joystick_pressed_up = true;
@@ -79,6 +99,10 @@ bool Controller::IsLeftJoystickPressedUp() {
 }
 
 bool Controller::IsLeftJoystickPressedDown() {
+	if (!controller_connected) {
+		return false;
+	}
+
 	Sint16 axis = SDL_GameControllerGetAxis(Controller::controller, SDL_CONTROLLER_AXIS_LEFTY);
 	if (axis >= CONTROLLER_PUSH && !Controller::is_left_joystick_pressed_down) {
 		Controller::is_left_joystick_pressed_down = true;

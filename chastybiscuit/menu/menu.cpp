@@ -32,7 +32,7 @@ Menu::~Menu() {
 }
 
 void Menu::Reload(SceneCode code) {
-
+	(void)code;
 }
 
 NextScene Menu::EventLoop() {

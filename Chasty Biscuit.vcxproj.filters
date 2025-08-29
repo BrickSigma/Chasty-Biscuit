@@ -39,6 +39,9 @@
     <ClCompile Include="chastybiscuit\level\level.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="chastybiscuit\level\player.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="chastybiscuit\application.hpp">
@@ -63,6 +66,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="chastybiscuit\level\level.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="chastybiscuit\level\player.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

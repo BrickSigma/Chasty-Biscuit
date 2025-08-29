@@ -45,7 +45,7 @@ namespace scene_manager {
 		virtual ~Scene() = default;
 
 		// Used to update the renderer on windows resize events
-		void UpdateRenderer(SDL_Renderer* renderer) {
+		virtual void UpdateRenderer(SDL_Renderer* renderer) {
 			this->renderer = renderer;
 		}
 

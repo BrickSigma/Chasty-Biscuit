@@ -2,7 +2,7 @@
 #include <level/level.hpp>
 
 Level::Level(const char* id, SDL_Renderer* renderer) : Scene(id, renderer) {
-
+	player = Player(renderer);
 }
 
 Level::~Level() {
@@ -10,7 +10,7 @@ Level::~Level() {
 }
 
 void Level::Reload(SceneCode code) {
-
+	(void)code;
 }
 
 NextScene Level::EventLoop() {
@@ -30,10 +30,19 @@ NextScene Level::EventLoop() {
 		}
 	}
 
+	player.Move();
+
 	return next_scene;
 }
 
 void Level::RenderLoop() {
 	SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
 	SDL_RenderClear(renderer);
+
+	player.Draw();
+}
+
+void Level::UpdateRenderer(SDL_Renderer* renderer) {
+	Scene::UpdateRenderer(renderer);
+	player.renderer = renderer;
 }

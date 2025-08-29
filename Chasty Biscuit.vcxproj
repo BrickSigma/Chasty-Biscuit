@@ -159,6 +159,7 @@ xcopy "$(ProjectDir)resources" "$(OutDir)resources" /E /Y /I
     <ClCompile Include="chastybiscuit\controller\controller.cpp" />
     <ClCompile Include="chastybiscuit\font\font.cpp" />
     <ClCompile Include="chastybiscuit\level\level.cpp" />
+    <ClCompile Include="chastybiscuit\level\player.cpp" />
     <ClCompile Include="chastybiscuit\main.cpp" />
     <ClCompile Include="chastybiscuit\menu\menu.cpp" />
     <ClCompile Include="chastybiscuit\scene_manager\scene_manager.cpp" />
@@ -169,6 +170,7 @@ xcopy "$(ProjectDir)resources" "$(OutDir)resources" /E /Y /I
     <ClInclude Include="chastybiscuit\controller\controller.hpp" />
     <ClInclude Include="chastybiscuit\font\font.hpp" />
     <ClInclude Include="chastybiscuit\level\level.hpp" />
+    <ClInclude Include="chastybiscuit\level\player.hpp" />
     <ClInclude Include="chastybiscuit\menu\menu.hpp" />
     <ClInclude Include="chastybiscuit\scene_manager\scene.hpp" />
     <ClInclude Include="chastybiscuit\scene_manager\scene_manager.hpp" />
