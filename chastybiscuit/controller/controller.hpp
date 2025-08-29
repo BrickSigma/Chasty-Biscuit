@@ -14,6 +14,9 @@ typedef struct ControllerAxis {
 // Used to ignore joystick drifting
 constexpr Sint16 CONTROLLER_DRIFT = 10000;
 
+// Used to check if joystick moved up once
+constexpr Sint16 CONTROLLER_PUSH = 20000;
+
 /*
 Class used to handle game controllers.
 */
@@ -24,6 +27,12 @@ class Controller {
 
 	// Button states: used to check if a button has been pressed once
 	static bool is_a_pressed;
+
+    static bool is_start_pressed;
+
+    static bool is_left_joystick_pressed_up;
+
+    static bool is_left_joystick_pressed_down;
 
   public:
     // Indicates if a controller is connected or not
@@ -43,6 +52,12 @@ class Controller {
 
 	// Check if the A button has been pressed once
 	static bool IsAPressed();
+
+    static bool IsStartPressed();
+
+    static bool IsLeftJoystickPressedUp();
+
+    static bool IsLeftJoystickPressedDown();
 };
 
 #endif // CONTROLLER_HPP

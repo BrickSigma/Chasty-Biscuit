@@ -3,11 +3,11 @@
 #include <string.h>
 
 #include <menu/menu.hpp>
+#include <level/level.hpp>
 
 namespace scene_manager {
 	SceneManager::SceneManager(SDL_Window* window, SDL_Renderer* renderer) : window(window), renderer(renderer) {
-		// Get the window width and height
-		SDL_GetWindowSize(window, &this->window_width, &this->window_height);
+		this->UpdateRenderer();
 
 		// Setup the render texture
 		this->screen_texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGB888, SDL_TEXTUREACCESS_TARGET, SCREEN_WIDTH, SCREEN_HEIGHT);
@@ -18,9 +18,12 @@ namespace scene_manager {
 
 		// Setup the scenes for the game...
 		Menu* menu = new Menu("menu", this->renderer);
-
 		this->AddScene(menu);
-		this->PushRunningScene("menu", true);
+		this->PushRunningScene("menu", true, SCENE_EMPTY_CODE);
+
+		// Setup the level scene
+		Level* level = new Level("level", this->renderer);
+		this->AddScene(level);
 	}
 
 	void SceneManager::UpdateRenderer() {
@@ -28,6 +31,10 @@ namespace scene_manager {
 		if (this->renderer == nullptr) {
 			printf("Could not reload renderer: %s\n", SDL_GetError());
 			exit(-1);
+		}
+
+		if (SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND) != 0) {
+			printf("Could not set blend mode for renderer: %s\n", SDL_GetError());
 		}
 
 		SDL_GetWindowSize(this->window, &this->window_width, &this->window_height);
@@ -83,7 +90,7 @@ namespace scene_manager {
 		this->running_scenes.clear();
 	}
 
-	void SceneManager::PushRunningScene(const char* id, bool reload_scene) {
+	void SceneManager::PushRunningScene(const char* id, bool reload_scene, SceneCode scene_code) {
 		int index = -1;
 
 		for (int i = 0; i < (int)this->scenes.size(); i++) {
@@ -101,7 +108,7 @@ namespace scene_manager {
 		this->running_scenes.push_back(this->scenes[index]);
 		// Reload the scene if necessary
 		if (reload_scene) {
-			this->scenes[index]->Reload();
+			this->scenes[index]->Reload(scene_code);
 		}
 	}
 
@@ -194,7 +201,7 @@ namespace scene_manager {
 
 		// Loop through the new scenes and push them onto the running scenes array
 		for (int i = 0; i < next_scene.no_scenes_changed; i++) {
-			this->PushRunningScene(next_scene.scenes[i], next_scene.reload_scenes[i]);
+			this->PushRunningScene(next_scene.scenes[i], next_scene.reload_scenes[i], next_scene.scene_codes[i]);
 		}
 
 		return false;

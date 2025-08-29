@@ -98,8 +98,9 @@ namespace scene_manager {
 
 		@param id - ID of the scene to start running
 		@param reload_scene - if `true`, the scene will be reloaded
+		@param scene_code - a code passed to the scene to instruct how it should be reloaded
 		*/
-		void PushRunningScene(const char* id, bool reload_scene);
+		void PushRunningScene(const char* id, bool reload_scene, SceneCode scene_code);
 
 		/*
 		Runs the scene manager in the main game loop

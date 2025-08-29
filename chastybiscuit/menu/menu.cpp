@@ -21,6 +21,8 @@ Menu::Menu(const char* id, SDL_Renderer* renderer) : Scene(id, renderer) {
 
 	controls_msg_pos.x = (SCREEN_WIDTH / 2) - (controls_msg_pos.w / 2);
 	controls_msg_pos.y = start_msg_pos.y + start_msg_pos.h + 8;
+
+	max_menu_width = start_msg_pos.w > controls_msg_pos.w ? start_msg_pos.w : controls_msg_pos.w;
 }
 
 Menu::~Menu() {
@@ -29,11 +31,14 @@ Menu::~Menu() {
 	SDL_DestroyTexture(controls_msg);
 }
 
-void Menu::Reload() {
+void Menu::Reload(SceneCode code) {
 
 }
 
 NextScene Menu::EventLoop() {
+	// Keep trying to connect to a controller if it is available
+	Controller::Connect();
+
 	NextScene next_scene{};
 
 	while (SDL_PollEvent(&event)) {
@@ -47,8 +52,57 @@ NextScene Menu::EventLoop() {
 				next_scene.window_resized = true;
 			}
 			break;
+
+		case SDL_KEYDOWN:
+			SDL_Scancode scancode = event.key.keysym.scancode;
+			if (scancode == SDL_SCANCODE_SPACE ||
+				scancode == SDL_SCANCODE_RETURN ||
+				scancode == SDL_SCANCODE_A) {
+				// Handle going to the next scene
+				if (option == 0) {
+					next_scene.no_scenes_changed = 1;
+					next_scene.reload_scenes[0] = 0;
+					next_scene.scenes[0] = "level";
+				}
+			}
+
+			if (scancode == SDL_SCANCODE_DOWN) {
+				option++;
+				if (option > 1) {
+					option = 1;
+				}
+			}
+
+			if (scancode == SDL_SCANCODE_UP) {
+				option--;
+				if (option < 0) {
+					option = 0;
+				}
+			}
 		}
 	}
+
+	if (Controller::IsLeftJoystickPressedUp()) {
+		option--;
+		if (option < 0) {
+			option = 0;
+		}
+	}
+	else if (Controller::IsLeftJoystickPressedDown()) {
+		option++;
+		if (option > 1) {
+			option = 1;
+		}
+	}
+
+	if (Controller::IsAPressed()) {
+		if (option == 0) {
+			next_scene.no_scenes_changed = 1;
+			next_scene.reload_scenes[0] = 0;
+			next_scene.scenes[0] = "level";
+		}
+	}
+
 
 	return next_scene;
 }
@@ -56,6 +110,21 @@ NextScene Menu::EventLoop() {
 void Menu::RenderLoop() {
 	SDL_SetRenderDrawColor(renderer, 167, 124, 100, 255);
 	SDL_RenderClear(renderer);
+
+	SDL_Rect menu_bg{};
+
+	menu_bg.w = 4 + max_menu_width;
+	menu_bg.h = 2 + start_msg_pos.h;
+	menu_bg.x = (SCREEN_WIDTH / 2) - (menu_bg.w / 2);
+	menu_bg.y = (option == 0 ? start_msg_pos.y : controls_msg_pos.y) - 2;
+
+	int alpha = (64 * sin((double)counter / 11.0f)) + 191;
+
+	SDL_SetRenderDrawColor(renderer, 255, 182, 142, alpha);
+
+	counter++;
+
+	SDL_RenderFillRect(renderer, &menu_bg);
 
 	SDL_RenderCopy(renderer, title, NULL, &title_pos);
 	SDL_RenderCopy(renderer, start_msg, NULL, &start_msg_pos);

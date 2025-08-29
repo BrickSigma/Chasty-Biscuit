@@ -12,6 +12,11 @@
 constexpr int MAX_SCENES = 5;  // Maximum number of scens that can run in parallel.
 
 namespace scene_manager {
+	typedef enum SceneCode {
+		SCENE_EMPTY_CODE = 0,
+		SCENE_MENU_RESET,
+	}SceneCode;
+
 	/*
 	Structure containing info about the next scene to transition to if needed
 	*/
@@ -19,6 +24,7 @@ namespace scene_manager {
 		int no_scenes_changed;  // Number of scenes to be pushed onto the running scenes array.
 		const char* scenes[MAX_SCENES];  // Array of scene IDs to replace the stack with.
 		bool reload_scenes[MAX_SCENES];  // Array used to indicate whether a scene should be reloaded or not.
+		SceneCode scene_codes[MAX_SCENES];  // Code used during scene reloads.
 		bool exit;  // Used to indicate whether or not to exit the app if the user quits mid-scene.
 		bool window_resized;  // Indicates if the window resized.
 	} NextScene;
@@ -43,8 +49,9 @@ namespace scene_manager {
 			this->renderer = renderer;
 		}
 
-		// Used to restart a scene with it's initial values
-		virtual void Reload() = 0;
+		// Used to restart a scene with it's initial values.
+		// An optional code can be passed into it for specific setups
+		virtual void Reload(SceneCode code) = 0;
 
 		// Event loop function: used to handle events and game logic
 		// 
