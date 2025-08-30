@@ -14,7 +14,7 @@ constexpr int MAX_SCENES = 5;  // Maximum number of scens that can run in parall
 namespace scene_manager {
 	typedef enum SceneCode {
 		SCENE_EMPTY_CODE = 0,
-		SCENE_MENU_RESET,
+		SCENE_LEVEL_INIT  // Initialized the level to it's start state
 	}SceneCode;
 
 	/*

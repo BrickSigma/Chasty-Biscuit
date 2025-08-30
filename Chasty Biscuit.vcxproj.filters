@@ -71,6 +71,9 @@
     <ClInclude Include="chastybiscuit\level\player.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="chastybiscuit\utils\utils.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="index.html" />

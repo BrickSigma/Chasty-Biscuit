@@ -175,6 +175,7 @@ xcopy "$(ProjectDir)resources" "$(OutDir)resources" /E /Y /I
     <ClInclude Include="chastybiscuit\scene_manager\scene.hpp" />
     <ClInclude Include="chastybiscuit\scene_manager\scene_manager.hpp" />
     <ClInclude Include="chastybiscuit\setup.hpp" />
+    <ClInclude Include="chastybiscuit\utils\utils.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="index.html" />

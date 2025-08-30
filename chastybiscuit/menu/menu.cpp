@@ -61,7 +61,8 @@ NextScene Menu::EventLoop() {
 				// Handle going to the next scene
 				if (option == 0) {
 					next_scene.no_scenes_changed = 1;
-					next_scene.reload_scenes[0] = 0;
+					next_scene.reload_scenes[0] = true;
+					next_scene.scene_codes[0] = SCENE_LEVEL_INIT;
 					next_scene.scenes[0] = "level";
 				}
 			}
@@ -98,7 +99,8 @@ NextScene Menu::EventLoop() {
 	if (Controller::IsAPressed()) {
 		if (option == 0) {
 			next_scene.no_scenes_changed = 1;
-			next_scene.reload_scenes[0] = 0;
+			next_scene.reload_scenes[0] = true;
+			next_scene.scene_codes[0] = SCENE_LEVEL_INIT;
 			next_scene.scenes[0] = "level";
 		}
 	}

@@ -19,7 +19,7 @@ namespace scene_manager {
 		// Setup the scenes for the game...
 		Menu* menu = new Menu("menu", this->renderer);
 		this->AddScene(menu);
-		this->PushRunningScene("menu", true, SCENE_EMPTY_CODE);
+		this->PushRunningScene("menu", false, SCENE_EMPTY_CODE);
 
 		// Setup the level scene
 		Level* level = new Level("level", this->renderer);

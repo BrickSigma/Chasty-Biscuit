@@ -54,8 +54,8 @@ namespace scene_manager {
 		Uint64 end_frame = 0;
 
 		// Frame rate of the game 
-		Uint64 fps = 30;
-		Uint64 frame_time = 1000 / 30;
+		Uint64 fps = 24;
+		Uint64 frame_time = 1000 / 24;
 
 		// Used to limit the framerate
 		void Tick();
